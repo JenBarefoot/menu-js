@@ -71,12 +71,30 @@ const menu = [
     img: "./images/item-9.jpeg",
     desc: `skateboard fam synth authentic semiotics. Live-edge lyft af, edison bulb yuccie crucifix microdosing.`,
   },
+  {
+    id: 10,
+    title: "steak dinner",
+    category: "dinner",
+    price: 39.99,
+    img: "./images/item-10.jpeg",
+    desc: `skateboard fam synth authentic semiotics. Live-edge lyft af, edison bulb yuccie crucifix microdosing.`,
+  },
 ];
 
-const sectioncenter = document.querySelector(".section-center");
+const sectionCenter = document.querySelector(".section-center");
+const container = document.querySelector(".btn-container")
 
-window.addEventListener("DOMContentLoaded", function(){
-  let displayMenu = menu.map(function(item){
+
+// load items
+window.addEventListener("DOMContentLoaded", function () {
+  displayMenuItems(menu);
+  displayMenuButtons();
+  
+  });
+  
+function displayMenuItems(menuItems){
+  let displayMenu = menuItems.map(function(item){
+    
     return `<article class="menu-item">
       <img src=${item.img} class="photo" alt=${item.title} />
       <div class="item-info">
@@ -89,5 +107,40 @@ window.addEventListener("DOMContentLoaded", function(){
     </article>`;
   });
   displayMenu = displayMenu.join("");
-  console.log(displayMenu);
+
+  sectionCenter.innerHTML = displayMenu
+}
+
+function displayMenuButtons() {
+  const categories = menu.reduce(function (values, item) {
+    if (!values.includes(item.category)) {
+      values.push(item.category);
+    }
+    return values;
+  },
+  ["all"]
+  );
+  const categoryBtns = categories.map(function(category){
+    return `<button class="filter-btn" type="button" data-id=${category}>${category}</button>`
+  }).join("");
+  container.innerHTML = categoryBtns;
+  const filterBtns = document.querySelectorAll(".filter-btn")
+  //filter items
+filterBtns.forEach(function(btn){
+  btn.addEventListener("click", function (e) {
+    const category = e.currentTarget.dataset.id;
+    const menuCategory = menu.filter(function(menuItem){
+      // console.log(menuItem.category);
+      if(menuItem.category === category) {
+        return menuItem;
+      }
+    });
+    if(category === "all"){
+      displayMenuItems(menu)
+    }
+    else {
+      displayMenuItems(menuCategory);
+    }
+  });
 });
+}
